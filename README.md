@@ -1,3 +1,7 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/jmhobbs/go-pbo.svg)](https://pkg.go.dev/github.com/jmhobbs/go-pbo)
+[![Lint & Test](https://github.com/jmhobbs/go-pbo/actions/workflows/lint-and-test.yml/badge.svg)](https://github.com/jmhobbs/go-pbo/actions/workflows/lint-and-test.yml)
+[![codecov](https://codecov.io/github/jmhobbs/go-pbo/graph/badge.svg?token=sB2axgNro5)](https://codecov.io/github/jmhobbs/go-pbo)
+
 # go-pbo
 
 A Go library for working with PBO files from Bohemia Interactive.
