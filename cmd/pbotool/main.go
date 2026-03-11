@@ -20,11 +20,9 @@ func main() {
 		return nil
 	}
 
-	// pbotool inspect
 	rootCmd.Subcommands = append(rootCmd.Subcommands, inspectCmd())
-
-	// pbotool unpack -- subcommand
 	rootCmd.Subcommands = append(rootCmd.Subcommands, unpackCmd())
+	rootCmd.Subcommands = append(rootCmd.Subcommands, versionCmd)
 
 	if err := rootCmd.ParseAndRun(context.Background(), os.Args[1:]); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", ffhelp.Command(rootCmd))
