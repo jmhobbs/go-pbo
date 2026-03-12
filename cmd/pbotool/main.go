@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	// pbotool -- root command
 	rootCmd := &ff.Command{
 		Name:  "pbotool",
 		Usage: "pbotool SUBCOMMAND ...",
@@ -22,6 +21,7 @@ func main() {
 
 	rootCmd.Subcommands = append(rootCmd.Subcommands, inspectCmd())
 	rootCmd.Subcommands = append(rootCmd.Subcommands, unpackCmd())
+	rootCmd.Subcommands = append(rootCmd.Subcommands, packCmd())
 	rootCmd.Subcommands = append(rootCmd.Subcommands, versionCmd)
 
 	if err := rootCmd.ParseAndRun(context.Background(), os.Args[1:]); err != nil {

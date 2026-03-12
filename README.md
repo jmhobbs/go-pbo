@@ -8,7 +8,32 @@ A Go library for working with PBO files from Bohemia Interactive.
 
 ## pbotool
 
-Included is a command line tool for manipulating PBO files.  At present it supports inspecting and unpacking PBO files, but not creating them.
+Included is a command line tool for manipulating PBO files.
+
+```
+$ pbotool
+COMMAND
+  pbotool
+
+USAGE
+  pbotool SUBCOMMAND ...
+
+SUBCOMMANDS
+  inspect   Inspect the contents of a PBO
+  unpack    Unpack all files from a PBO
+  pack      Pack files into a PBO
+  version   Print version and build date information
+```
+
+### Inspect
+
+```
+COMMAND
+  inspect -- Inspect the contents of a PBO
+
+USAGE
+  pbotool inspect <file.pbo>
+```
 
 ```
 $ pbotool inspect ViralSuppresor.pbo
@@ -23,6 +48,16 @@ $ pbotool inspect ViralSuppresor.pbo
 - scripts\4_World\Classes\recipe\CraftUniSuppressor.c (4131 bytes)
 - scripts\4_World\Classes\recipe\PluginRecipesManagerBase.c (198 bytes)
 - texHeaders.bin (208 bytes)
+```
+
+### Unpack
+
+```
+COMMAND
+  unpack -- Unpack all files from a PBO
+
+USAGE
+  pbotool unpack <file.pbo> <output directory>
 ```
 
 ```
@@ -49,6 +84,30 @@ ViralSuppresor
 └── texHeaders.bin
 
 6 directories, 6 files
+```
+
+### Pack
+
+```
+COMMAND
+  pack -- Pack files into a PBO
+
+USAGE
+  pbotool pack [FLAGS] <file.pbo> <input file>...
+
+FLAGS
+  -p, --property STRING   PBO property in the form of key=value. Can be repeated.
+  -r, --recursive         Recursively add files from directories.
+```
+
+```
+$ pbotool pack -p "product=dayz ugc" -p prefix=ViralSuppresor -r out.pbo ViralSuppresor
++ ViralSuppresor/config.cpp
++ ViralSuppresor/data/Viral_AK_Sup.paa
++ ViralSuppresor/data/Viral_AK_Sup.png
++ ViralSuppresor/scripts/4_World/Classes/recipe/CraftUniSuppressor.c
++ ViralSuppresor/scripts/4_World/Classes/recipe/PluginRecipesManagerBase.c
++ ViralSuppresor/texHeaders.bin
 ```
 
 # References
