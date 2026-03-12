@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -102,9 +103,13 @@ func writeProperties(out io.Writer, properties map[string]string) error {
 }
 
 func writeFileHeader(out io.Writer, file fileMetadata) error {
+	// normalize paths
+	split := strings.Split(file.path, string(os.PathSeparator))
+	path := strings.Join(split, `\`)
+
 	return writeHeader(
 		out,
-		file.path,
+		path,
 		header{
 			Type:         0,
 			OriginalSize: 0,

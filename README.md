@@ -11,7 +11,6 @@ A Go library for working with PBO files from Bohemia Interactive.
 Included is a command line tool for manipulating PBO files.
 
 ```
-$ pbotool
 COMMAND
   pbotool
 
