@@ -14,15 +14,15 @@ import (
 )
 
 func packCmd() *ff.Command {
-	packFlags := ff.NewFlagSet("repeat")
-	properties := packFlags.StringSet('p', "property", "PBO property in the form of key=value. Can be repeated.")
-	recursive := packFlags.Bool('r', "recursive", "Recursively add files from directories.")
+	flags := ff.NewFlagSet("pack")
+	properties := flags.StringSet('p', "property", "PBO property in the form of key=value. Can be repeated.")
+	recursive := flags.Bool('r', "recursive", "Recursively add files from directories.")
 
 	return &ff.Command{
 		Name:      "pack",
 		Usage:     "pbotool pack [FLAGS] <file.pbo> <input file>...",
 		ShortHelp: "Pack files into a PBO",
-		Flags:     packFlags,
+		Flags:     flags,
 		Exec: func(ctx context.Context, args []string) error {
 			if len(args) == 0 {
 				return errors.New("missing output file and input file arguments")
