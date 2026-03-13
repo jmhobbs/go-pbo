@@ -20,6 +20,7 @@ func main() {
 	}
 
 	rootCmd.Subcommands = append(rootCmd.Subcommands, inspectCmd())
+	rootCmd.Subcommands = append(rootCmd.Subcommands, grepCmd())
 	rootCmd.Subcommands = append(rootCmd.Subcommands, unpackCmd())
 	rootCmd.Subcommands = append(rootCmd.Subcommands, packCmd())
 	rootCmd.Subcommands = append(rootCmd.Subcommands, versionCmd)

@@ -19,6 +19,7 @@ USAGE
 
 SUBCOMMANDS
   inspect   Inspect the contents of a PBO
+  grep      Search non-binary files in a PBO
   unpack    Unpack all files from a PBO
   pack      Pack files into a PBO
   version   Print version and build date information
@@ -47,6 +48,26 @@ $ pbotool inspect ViralSuppresor.pbo
 - scripts\4_World\Classes\recipe\CraftUniSuppressor.c (4131 bytes)
 - scripts\4_World\Classes\recipe\PluginRecipesManagerBase.c (198 bytes)
 - texHeaders.bin (208 bytes)
+```
+
+### Grep
+
+```
+COMMAND
+  grep -- Search non-binary files in a PBO without unpacking
+
+USAGE
+  pbotool grep <file.pbo> <pattern>
+
+FLAGS
+  -i, --ignore-case   Perform case-insensitive matching.
+```
+
+```
+$ pbotool grep -i ViralSuppresor.pbo cfg
+config.cpp:1:class CfgPatches
+config.cpp:21:class CfgMods
+config.cpp:54:class cfgVehicles
 ```
 
 ### Unpack
