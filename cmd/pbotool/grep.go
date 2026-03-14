@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"slices"
-	"strings"
 
 	"github.com/jmhobbs/go-pbo"
 	"github.com/peterbourgon/ff/v4"
@@ -23,7 +23,7 @@ func grepCmd() *ff.Command {
 	return &ff.Command{
 		Name:      "grep",
 		Usage:     "pbotool grep <file.pbo> <pattern>",
-		ShortHelp: "Search non-binary files in a PBO",
+		ShortHelp: "Search non-binary files in a PBO (RE2 syntax)",
 		Flags:     flags,
 		Exec: func(ctx context.Context, args []string) error {
 			if len(args) < 2 {
@@ -40,9 +40,15 @@ func grepCmd() *ff.Command {
 				return fmt.Errorf("failed to load PBO: %w", err)
 			}
 
-			pattern := args[1]
+			var pattern *regexp.Regexp
+
 			if *caseInsensitive {
-				pattern = strings.ToLower(pattern)
+				pattern, err = regexp.Compile("(?i)" + args[1])
+			} else {
+				pattern, err = regexp.Compile(args[1])
+			}
+			if err != nil {
+				return fmt.Errorf("invalid pattern: %w", err)
 			}
 
 			for _, file := range bank.Files {
@@ -56,7 +62,7 @@ func grepCmd() *ff.Command {
 					line := 0
 					for scanner.Scan() {
 						line += 1
-						if *caseInsensitive && strings.Contains(strings.ToLower(scanner.Text()), pattern) || strings.Contains(scanner.Text(), pattern) {
+						if pattern.Match(scanner.Bytes()) {
 							fmt.Printf("%s:%d:%s\n", file.Filename, line, scanner.Text())
 						}
 					}
