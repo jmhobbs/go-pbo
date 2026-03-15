@@ -52,6 +52,10 @@ func unpackCmd() *ff.Command {
 
 			for _, file := range bank.Files {
 				log.Printf("Unpacking %s\n", file.Filename)
+				if file.DataSize == 0 {
+					log.Println("  Empty file, skipping")
+					continue
+				}
 				var dir string
 				// convert windows paths to platform native paths
 				segments := strings.Split(file.Filename, "\\")
