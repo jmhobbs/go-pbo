@@ -1,8 +1,9 @@
 module github.com/jmhobbs/go-pbo
 
-go 1.25.0
+go 1.26.0
 
 require (
+	github.com/jmhobbs/go-raP v0.0.2
 	github.com/peterbourgon/ff/v4 v4.0.0-beta.1
 	github.com/stretchr/testify v1.11.1
 )

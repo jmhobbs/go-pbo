@@ -77,12 +77,15 @@ COMMAND
   unpack -- Unpack all files from a PBO
 
 USAGE
-  pbotool unpack <file.pbo> <output directory>
+  pbotool unpack [flags] <file.pbo> <output directory>
+
+FLAGS
+  -u, --unrap   De-binarize raP files (i.e. config.bin -> config.cpp)
 ```
 
 ```
-$ pbotool unpack ViralSuppresor.pbo ViralSuppresor
-2026/03/11 12:54:53 Unpacking config.cpp
+$ pbotool unpack --unrap ViralSuppresor.pbo ViralSuppresor
+2026/03/11 12:54:53 Unpacking config.bin
 2026/03/11 12:54:53 Unpacking data\Viral_AK_Sup.paa
 2026/03/11 12:54:53 Unpacking data\Viral_AK_Sup.png
 2026/03/11 12:54:53 Unpacking scripts\4_World\Classes\recipe\CraftUniSuppressor.c

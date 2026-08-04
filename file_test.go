@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_File_Reader(t *testing.T) {
+func Test_File_ReadSeeker(t *testing.T) {
 	t.Run("reads file content", func(t *testing.T) {
 		buf := bytes.NewBuffer([]byte{
 			// File header: "test.txt"
@@ -35,7 +35,7 @@ func Test_File_Reader(t *testing.T) {
 		require.NoError(t, err)
 		require.Len(t, bank.Files, 1)
 
-		r, err := bank.Files[0].Reader()
+		r, err := bank.Files[0].ReadSeeker()
 		require.NoError(t, err)
 
 		content, err := io.ReadAll(r)
@@ -75,13 +75,13 @@ func Test_File_Reader(t *testing.T) {
 		require.NoError(t, err)
 		require.Len(t, bank.Files, 2)
 
-		r0, err := bank.Files[0].Reader()
+		r0, err := bank.Files[0].ReadSeeker()
 		require.NoError(t, err)
 		c0, err := io.ReadAll(r0)
 		require.NoError(t, err)
 		assert.Equal(t, []byte("abc"), c0)
 
-		r1, err := bank.Files[1].Reader()
+		r1, err := bank.Files[1].ReadSeeker()
 		require.NoError(t, err)
 		c1, err := io.ReadAll(r1)
 		require.NoError(t, err)
@@ -110,7 +110,7 @@ func Test_File_Reader(t *testing.T) {
 		require.Len(t, bank.Files, 1)
 
 		for i := 0; i < 3; i++ {
-			r, err := bank.Files[0].Reader()
+			r, err := bank.Files[0].ReadSeeker()
 			require.NoError(t, err)
 			content, err := io.ReadAll(r)
 			require.NoError(t, err)

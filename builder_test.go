@@ -93,7 +93,7 @@ func Test_Builder_AddFile(t *testing.T) {
 		assert.Equal(t, uint32(3), bank.Files[0].DataSize)
 		assert.Equal(t, uint32(100), bank.Files[0].Timestamp)
 
-		r0, err := bank.Files[0].Reader()
+		r0, err := bank.Files[0].ReadSeeker()
 		require.NoError(t, err)
 		c0, err := io.ReadAll(r0)
 		require.NoError(t, err)
@@ -103,7 +103,7 @@ func Test_Builder_AddFile(t *testing.T) {
 		assert.Equal(t, uint32(4), bank.Files[1].DataSize)
 		assert.Equal(t, uint32(200), bank.Files[1].Timestamp)
 
-		r1, err := bank.Files[1].Reader()
+		r1, err := bank.Files[1].ReadSeeker()
 		require.NoError(t, err)
 		c1, err := io.ReadAll(r1)
 		require.NoError(t, err)
@@ -134,7 +134,7 @@ func Test_Builder_AddFileFromPath(t *testing.T) {
 		require.Len(t, bank.Files, 1)
 		assert.Equal(t, uint32(9), bank.Files[0].DataSize)
 
-		r, err := bank.Files[0].Reader()
+		r, err := bank.Files[0].ReadSeeker()
 		require.NoError(t, err)
 		content, err := io.ReadAll(r)
 		require.NoError(t, err)
@@ -191,13 +191,13 @@ func Test_Builder_Build(t *testing.T) {
 		require.Len(t, bank.Files, 2)
 
 		// AddFileFromPath entries are written before AddFile entries
-		r0, err := bank.Files[0].Reader()
+		r0, err := bank.Files[0].ReadSeeker()
 		require.NoError(t, err)
 		c0, err := io.ReadAll(r0)
 		require.NoError(t, err)
 		assert.Equal(t, "on disk", string(c0))
 
-		r1, err := bank.Files[1].Reader()
+		r1, err := bank.Files[1].ReadSeeker()
 		require.NoError(t, err)
 		c1, err := io.ReadAll(r1)
 		require.NoError(t, err)

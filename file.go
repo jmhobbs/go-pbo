@@ -3,6 +3,8 @@ package pbo
 import (
 	"encoding/binary"
 	"io"
+
+	iio "github.com/jmhobbs/go-pbo/internal/io"
 )
 
 type MimeType uint32
@@ -23,18 +25,17 @@ type File struct {
 }
 
 func (f *File) Reader() (io.Reader, error) {
+	return f.ReadSeeker()
+}
+
+func (f *File) ReadSeeker() (io.ReadSeeker, error) {
 	if f.reader == nil || f.offset == 0 {
 		return nil, io.ErrUnexpectedEOF
 	}
 
-	_, err := f.reader.Seek(int64(f.offset), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-
 	// TODO: Support compressed files with a wrapper around reader
 
-	return io.LimitReader(f.reader, int64(f.DataSize)), nil
+	return iio.LimitedReadSeeker(f.reader, int64(f.offset), int64(f.DataSize))
 }
 
 type header struct {

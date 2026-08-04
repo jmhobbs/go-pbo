@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -11,13 +12,19 @@ import (
 	"strings"
 
 	"github.com/jmhobbs/go-pbo"
+	"github.com/jmhobbs/go-raP"
+	"github.com/jmhobbs/go-raP/printer"
 	"github.com/peterbourgon/ff/v4"
 )
 
 func unpackCmd() *ff.Command {
+	flags := ff.NewFlagSet("unpack")
+	unrap := flags.Bool('u', "unrap", "De-binarize raP files (i.e. config.bin -> config.cpp)")
+
 	return &ff.Command{
 		Name:      "unpack",
-		Usage:     "pbotool unpack <file.pbo> <output directory>",
+		Usage:     "pbotool unpack [flags] <file.pbo> <output directory>",
+		Flags:     flags,
 		ShortHelp: "Unpack all files from a PBO",
 		Exec: func(ctx context.Context, args []string) error {
 			if len(args) < 2 {
@@ -56,6 +63,24 @@ func unpackCmd() *ff.Command {
 					log.Println("  Empty file, skipping")
 					continue
 				}
+
+				reader, err := file.ReadSeeker()
+				if err != nil {
+					return err
+				}
+
+				var shouldUnrap bool
+				if *unrap {
+					shouldUnrap, err = isBinarizedFile(reader)
+					if err != nil {
+						return err
+					}
+					_, err = reader.Seek(0, io.SeekStart) // Reset reader for actual reading
+					if err != nil {
+						return err
+					}
+				}
+
 				var dir string
 				// convert windows paths to platform native paths
 				segments := strings.Split(file.Filename, "\\")
@@ -66,7 +91,11 @@ func unpackCmd() *ff.Command {
 					dir = filepath.Join(segments[:len(segments)-1]...)
 				}
 
-				err := os.MkdirAll(filepath.Join(args[1], dir), 0755)
+				if shouldUnrap {
+					filename = strings.TrimSuffix(filename, ".bin") + ".cpp"
+				}
+
+				err = os.MkdirAll(filepath.Join(args[1], dir), 0755)
 				if err != nil {
 					panic(err)
 				}
@@ -76,18 +105,34 @@ func unpackCmd() *ff.Command {
 				}
 				defer f.Close()
 
-				reader, err := file.Reader()
-				if err != nil {
-					return err
-				}
-
-				_, err = io.Copy(f, reader)
-				if err != nil {
-					return err
+				if shouldUnrap {
+					root, err := raP.Decode(reader)
+					if err != nil {
+						return err
+					}
+					err = printer.New().File(f, root)
+					if err != nil {
+						return err
+					}
+				} else {
+					_, err = io.Copy(f, reader)
+					if err != nil {
+						return err
+					}
 				}
 			}
 
 			return nil
 		},
 	}
+}
+
+func isBinarizedFile(in io.ReadSeeker) (bool, error) {
+	fingerprint := make([]byte, 4)
+	_, err := in.Read(fingerprint)
+	if err != nil {
+		return false, err
+	}
+
+	return bytes.Equal([]byte{0, 'r', 'a', 'P'}, fingerprint), nil
 }
